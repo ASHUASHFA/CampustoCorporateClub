@@ -1,0 +1,6 @@
+1, login 
+2, particular attendance
+3, session daily update 
+4, previous session store 
+5, report document 
+6, events section
