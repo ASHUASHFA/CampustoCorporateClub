@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C3 – Campus to Corporate</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --card: #1a1a26;
+    --border: #2a2a3d;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e8d8;
+    --text: #e8e8f0;
+    --muted: #7a7a9a;
+    --gold: #f5c542;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent3); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 40%, rgba(108,99,255,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 75% 60%, rgba(67,232,216,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 60% 20%, rgba(255,101,132,0.1) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+  }
+
+  .hero-content { position: relative; max-width: 760px; animation: fadeUp 0.9s ease both; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(108,99,255,0.12);
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-bottom: 28px;
+  }
+
+  .hero-badge::before { content: '●'; font-size: 0.6rem; color: var(--accent); animation: pulse 2s infinite; }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 20px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto 40px;
+  }
+
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #9b93ff);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(108,99,255,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(108,99,255,0.45); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── STATS ── */
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 60px;
+    padding: 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    max-width: 700px;
+    margin: 60px auto 0;
+  }
+
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── SECTIONS ── */
+  section { padding: 90px 48px; max-width: 1200px; margin: 0 auto; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent3);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .section-label::before { content: ''; width: 24px; height: 2px; background: var(--accent3); }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+
+  .section-desc { color: var(--muted); max-width: 560px; margin-bottom: 48px; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px;
+    margin-bottom: 36px;
+    overflow-x: auto;
+    width: fit-content;
+  }
+
+  .tab {
+    padding: 9px 20px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeUp 0.3s ease; }
+
+  /* ── ATTENDANCE ── */
+  .attendance-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .attendance-date {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+
+  .attendance-date input[type="date"] {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    outline: none;
+    color-scheme: dark;
+  }
+
+  .att-table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(42,42,61,0.5);
+    font-size: 0.9rem;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(108,99,255,0.04); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .badge-present { background: rgba(67,232,216,0.12); color: var(--accent3); }
+  .badge-absent { background: rgba(255,101,132,0.12); color: var(--accent2); }
+  .badge-late { background: rgba(245,197,66,0.12); color: var(--gold); }
+
+  .att-toggle {
+    display: flex;
+    gap: 6px;
+  }
+
+  .att-btn {
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .att-btn.p { background: rgba(67,232,216,0.1); color: var(--accent3); border-color: rgba(67,232,216,0.25); }
+  .att-btn.p:hover, .att-btn.p.sel { background: var(--accent3); color: #0a0a0f; }
+  .att-btn.a { background: rgba(255,101,132,0.1); color: var(--accent2); border-color: rgba(255,101,132,0.25); }
+  .att-btn.a:hover, .att-btn.a.sel { background: var(--accent2); color: #fff; }
+  .att-btn.l { background: rgba(245,197,66,0.1); color: var(--gold); border-color: rgba(245,197,66,0.25); }
+  .att-btn.l:hover, .att-btn.l.sel { background: var(--gold); color: #0a0a0f; }
+
+  .att-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .att-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .att-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  .att-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+  }
+
+  .att-lbl { color: var(--muted); font-size: 0.78rem; }
+
+  /* ── MEMBERS ── */
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .member-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 20px;
+    text-align: center;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .member-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .member-card:hover { border-color: rgba(108,99,255,0.4); transform: translateY(-4px); }
+  .member-card:hover::before { opacity: 1; }
+
+  .member-avatar {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 auto 14px;
+  }
+
+  .member-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+
+  .member-role {
+    font-size: 0.75rem;
+    color: var(--accent3);
+    font-weight: 500;
+    background: rgba(67,232,216,0.08);
+    border-radius: 100px;
+    padding: 3px 10px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .member-dept { color: var(--muted); font-size: 0.78rem; }
+
+  .role-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 600;
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── EVENTS ── */
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+  }
+
+  .event-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .event-card:hover { border-color: rgba(108,99,255,0.4); transform: translateY(-4px); }
+
+  .event-tag {
+    display: inline-flex;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .tag-workshop { background: rgba(108,99,255,0.15); color: #9b93ff; }
+  .tag-hackathon { background: rgba(255,101,132,0.15); color: var(--accent2); }
+  .tag-session { background: rgba(67,232,216,0.15); color: var(--accent3); }
+  .tag-seminar { background: rgba(245,197,66,0.15); color: var(--gold); }
+
+  .event-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .event-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
+
+  .event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .event-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .event-status {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .status-upcoming { background: var(--accent3); box-shadow: 0 0 8px rgba(67,232,216,0.6); animation: pulse 2s infinite; }
+  .status-completed { background: var(--muted); }
+  .status-live { background: var(--accent2); box-shadow: 0 0 8px rgba(255,101,132,0.7); animation: pulse 1.2s infinite; }
+
+  /* ── DAILY SCHEDULE ── */
+  .schedule-day-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .day-pill {
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .day-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .day-pill:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+
+  .schedule-timeline { position: relative; padding-left: 32px; }
+
+  .schedule-timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  .schedule-item {
+    position: relative;
+    display: flex;
+    gap: 20px;
+    padding: 0 0 28px;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .schedule-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.2);
+  }
+
+  .schedule-time {
+    min-width: 80px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent3);
+    padding-top: 4px;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .schedule-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    flex: 1;
+    transition: border-color 0.2s;
+  }
+
+  .schedule-body:hover { border-color: rgba(108,99,255,0.4); }
+
+  .schedule-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+
+  .schedule-detail { color: var(--muted); font-size: 0.82rem; }
+
+  .schedule-speaker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+
+  .speaker-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .about-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 32px;
+  }
+
+  .about-icon { font-size: 2rem; margin-bottom: 16px; }
+
+  .about-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .about-card p { color: var(--muted); font-size: 0.9rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  footer strong {
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Syne', sans-serif;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── SEARCH BOX ── */
+  .search-box {
+    position: relative;
+    max-width: 320px;
+  }
+
+  .search-box input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px 10px 38px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box input::placeholder { color: var(--muted); }
+
+  .search-box::before {
+    content: '🔍';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    pointer-events: none;
+  }
+
+  /* ── DIVIDER ── */
+  .full-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { gap: 18px; }
+    section { padding: 60px 20px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .att-summary { grid-template-columns: 1fr; }
+    .stats { flex-direction: column; gap: 24px; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">C3</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#members">Members</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#attendance">Attendance</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Active Community</div>
+    <h1>C3 – <span>Campus to Corporate</span></h1>
+    <p class="hero-sub">A community where CSE students learn, collaborate and grow together towards successful careers.</p>
+    <div class="hero-btns">
+      <a href="https://docs.google.com/forms/d/1uh785SaOC-7WfFhjRnm9xqy6lETPBlyRAGbJQaYB3us/viewform" class="btn btn-primary">✦ Join Now</a>
+      <a href="#events" class="btn btn-outline">View Events →</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num">48</div><div class="stat-label">Members</div></div>
+      <div class="stat"><div class="stat-num">12</div><div class="stat-label">Events</div></div>
+      <div class="stat"><div class="stat-num">94%</div><div class="stat-label">Attendance Rate</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Teams</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="full-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">Who We Are</div>
+  <h2>About C3</h2>
+  <p class="section-desc">Bridging the gap between academic learning and real-world industry skills.</p>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <div class="about-icon">🎯</div>
+      <h3>Our Mission</h3>
+      <p>To help CSE students bridge the gap between academic learning and real-world industry skills through sessions, collaboration and practical exposure.</p>
+    </div>
+    <div class="about-card">
+      <div class="about-icon">🚀</div>
+      <h3>Our Vision</h3>
+      <p>To build a strong tech community where students continuously learn, share knowledge and grow towards successful careers in the industry.</p>
+    </div>
+    <div class="about-card">
+      <div class="about-icon">🤝</div>
+      <h3>Collaboration</h3>
+      <p>We believe in the power of teamwork. C3 fosters an environment of peer learning, open knowledge sharing and inclusive growth for all members.</p>
+    </div>
+    <div class="about-card">
+      <div class="about-icon">💡</div>
+      <h3>Innovation</h3>
+      <p>From hackathons to AI workshops, we keep our members at the cutting edge of technology trends and industry practices.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- MEMBERS -->
+<section id="members">
+  <div class="section-label">Our Team</div>
+  <h2>Club Members</h2>
+  <p class="section-desc">Meet the talented people driving C3 forward.</p>
+
+  <div style="margin-bottom: 24px;">
+    <div class="search-box">
+      <input type="text" id="member-search" placeholder="Search members..." oninput="filterMembers(this.value)">
+    </div>
+  </div>
+
+  <div id="members-container">
+    <div class="role-section-title">Leadership</div>
+    <div class="members-grid" id="grid-leadership">
+      <div class="member-card" data-name="Ashfaq Ahmed">
+        <div class="member-avatar">AA</div>
+        <div class="member-name">Ashfaq Ahmed</div>
+        <div class="member-role">President</div>
+        <div class="member-dept">CSE – Year 3</div>
+      </div>
+    </div>
+
+    <div class="role-section-title">Developer Team</div>
+    <div class="members-grid" id="grid-dev">
+      <div class="member-card" data-name="Mohammed Nabeel">
+        <div class="member-avatar">MN</div>
+        <div class="member-name">Mohammed Nabeel</div>
+        <div class="member-role">Developer</div>
+        <div class="member-dept">CSE – Year 3</div>
+      </div>
+      <div class="member-card" data-name="Abdul Gaffoor Asjad">
+        <div class="member-avatar">AG</div>
+        <div class="member-name">Abdul Gaffoor Asjad</div>
+        <div class="member-role">Developer</div>
+        <div class="member-dept">CSE – Year 3</div>
+      </div>
+    </div>
+
+    <div class="role-section-title">Presentation & Tech Team</div>
+    <div class="members-grid" id="grid-pres">
+      <div class="member-card" data-name="Mohammed Ayaz">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#ff6584,#ff9a8b)">MA</div>
+        <div class="member-name">Mohammed Ayaz</div>
+        <div class="member-role">Tech Lead</div>
+        <div class="member-dept">CSE – Year 2</div>
+      </div>
+      <div class="member-card" data-name="Mohammed Aasif">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#ff6584,#ff9a8b)">MA</div>
+        <div class="member-name">Mohammed Aasif</div>
+        <div class="member-role">Tech Lead</div>
+        <div class="member-dept">CSE – Year 2</div>
+      </div>
+      <div class="member-card" data-name="Mohammed Abuzar">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#ff6584,#ff9a8b)">MA</div>
+        <div class="member-name">Mohammed Abuzar</div>
+        <div class="member-role">Presenter</div>
+        <div class="member-dept">CSE – Year 2</div>
+      </div>
+      <div class="member-card" data-name="Harini Radhakrishnan">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#f5c542,#ffaa00)">HR</div>
+        <div class="member-name">Harini Radhakrishnan</div>
+        <div class="member-role">Presenter</div>
+        <div class="member-dept">CSE – Year 2</div>
+      </div>
+    </div>
+
+    <div class="role-section-title">Organizing Team</div>
+    <div class="members-grid" id="grid-org">
+      <div class="member-card" data-name="Faseeh Mohammed">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#43e8d8,#0fc)">FM</div>
+        <div class="member-name">Faseeh Mohammed</div>
+        <div class="member-role">Organizer</div>
+        <div class="member-dept">CSE – Year 2</div>
+      </div>
+      <div class="member-card" data-name="Mohammed Aamir">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#43e8d8,#0fc)">MA</div>
+        <div class="member-name">Mohammed Aamir</div>
+        <div class="member-role">Organizer</div>
+        <div class="member-dept">CSE – Year 2</div>
+      </div>
+      <div class="member-card" data-name="Rohan Emmanuel">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#43e8d8,#0fc)">RE</div>
+        <div class="member-name">Rohan Emmanuel</div>
+        <div class="member-role">Organizer</div>
+        <div class="member-dept">CSE – Year 1</div>
+      </div>
+      <div class="member-card" data-name="Samnesh">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#43e8d8,#0fc)">S</div>
+        <div class="member-name">Samnesh</div>
+        <div class="member-role">Organizer</div>
+        <div class="member-dept">CSE – Year 1</div>
+      </div>
+    </div>
+
+    <div class="role-section-title">Trainees</div>
+    <div class="members-grid" id="grid-trainee">
+      <div class="member-card" data-name="Deepadharshini Sankar">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#f5c542,#ff6584)">DS</div>
+        <div class="member-name">Deepadharshini Sankar</div>
+        <div class="member-role">Trainee</div>
+        <div class="member-dept">CSE – Year 1</div>
+      </div>
+      <div class="member-card" data-name="Sahira Fathima">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#f5c542,#ff6584)">SF</div>
+        <div class="member-name">Sahira Fathima</div>
+        <div class="member-role">Trainee</div>
+        <div class="member-dept">CSE – Year 1</div>
+      </div>
+      <div class="member-card" data-name="Divyatharini Balakumar">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#f5c542,#ff6584)">DB</div>
+        <div class="member-name">Divyatharini Balakumar</div>
+        <div class="member-role">Trainee</div>
+        <div class="member-dept">CSE – Year 1</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- EVENTS -->
+<section id="events">
+  <div class="section-label">What We Do</div>
+  <h2>Events</h2>
+  <p class="section-desc">Workshops, hackathons, and sessions to keep you sharp and ahead.</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('all-events', this)">All Events</button>
+    <button class="tab" onclick="switchTab('upcoming-events', this)">Upcoming</button>
+    <button class="tab" onclick="switchTab('completed-events', this)">Completed</button>
+  </div>
+
+  <div id="all-events" class="tab-content active">
+    <div class="events-grid">
+      <div class="event-card">
+        <div class="event-status status-upcoming"></div>
+        <span class="event-tag tag-workshop">Workshop</span>
+        <div class="event-title">AI Tools Workshop</div>
+        <div class="event-desc">Learning tools like Gamma AI, NotebookLM and other productivity tools for students.</div>
+        <div class="event-meta">
+          <span>📅 Apr 20, 2026</span>
+          <span>🕐 10:00 AM</span>
+          <span>📍 Lab 3</span>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-upcoming"></div>
+        <span class="event-tag tag-session">Session</span>
+        <div class="event-title">Web Development Session</div>
+        <div class="event-desc">Hands-on introduction to HTML, CSS and JavaScript for complete beginners.</div>
+        <div class="event-meta">
+          <span>📅 Apr 27, 2026</span>
+          <span>🕐 02:00 PM</span>
+          <span>📍 Seminar Hall</span>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-upcoming"></div>
+        <span class="event-tag tag-hackathon">Hackathon</span>
+        <div class="event-title">Hackathon Preparation</div>
+        <div class="event-desc">Helping students prepare strategies and team-building tips for competitive hackathons.</div>
+        <div class="event-meta">
+          <span>📅 May 5, 2026</span>
+          <span>🕐 09:00 AM</span>
+          <span>📍 Auditorium</span>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-completed"></div>
+        <span class="event-tag tag-seminar">Seminar</span>
+        <div class="event-title">Industry Readiness Talk</div>
+        <div class="event-desc">A motivational and practical session by alumni working at top tech companies.</div>
+        <div class="event-meta">
+          <span>📅 Mar 10, 2026</span>
+          <span>🕐 11:00 AM</span>
+          <span>📍 Seminar Hall</span>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-completed"></div>
+        <span class="event-tag tag-workshop">Workshop</span>
+        <div class="event-title">Git & GitHub Basics</div>
+        <div class="event-desc">A beginner-friendly hands-on session on version control, branching and collaboration.</div>
+        <div class="event-meta">
+          <span>📅 Feb 22, 2026</span>
+          <span>🕐 03:00 PM</span>
+          <span>📍 Lab 1</span>
+        </div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-completed"></div>
+        <span class="event-tag tag-session">Session</span>
+        <div class="event-title">Python for Beginners</div>
+        <div class="event-desc">Introduction to Python programming, data types, loops, and simple projects.</div>
+        <div class="event-meta">
+          <span>📅 Jan 18, 2026</span>
+          <span>🕐 10:00 AM</span>
+          <span>📍 Lab 2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="upcoming-events" class="tab-content">
+    <div class="events-grid">
+      <div class="event-card">
+        <div class="event-status status-upcoming"></div>
+        <span class="event-tag tag-workshop">Workshop</span>
+        <div class="event-title">AI Tools Workshop</div>
+        <div class="event-desc">Learning tools like Gamma AI, NotebookLM and other productivity tools.</div>
+        <div class="event-meta"><span>📅 Apr 20, 2026</span><span>🕐 10:00 AM</span><span>📍 Lab 3</span></div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-upcoming"></div>
+        <span class="event-tag tag-session">Session</span>
+        <div class="event-title">Web Development Session</div>
+        <div class="event-desc">Hands-on introduction to HTML, CSS and JavaScript.</div>
+        <div class="event-meta"><span>📅 Apr 27, 2026</span><span>🕐 02:00 PM</span><span>📍 Seminar Hall</span></div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-upcoming"></div>
+        <span class="event-tag tag-hackathon">Hackathon</span>
+        <div class="event-title">Hackathon Preparation</div>
+        <div class="event-desc">Helping students prepare for hackathons and coding competitions.</div>
+        <div class="event-meta"><span>📅 May 5, 2026</span><span>🕐 09:00 AM</span><span>📍 Auditorium</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="completed-events" class="tab-content">
+    <div class="events-grid">
+      <div class="event-card">
+        <div class="event-status status-completed"></div>
+        <span class="event-tag tag-seminar">Seminar</span>
+        <div class="event-title">Industry Readiness Talk</div>
+        <div class="event-desc">A motivational session by alumni working at top tech companies.</div>
+        <div class="event-meta"><span>📅 Mar 10, 2026</span><span>🕐 11:00 AM</span><span>📍 Seminar Hall</span></div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-completed"></div>
+        <span class="event-tag tag-workshop">Workshop</span>
+        <div class="event-title">Git & GitHub Basics</div>
+        <div class="event-desc">Version control, branching and collaboration hands-on session.</div>
+        <div class="event-meta"><span>📅 Feb 22, 2026</span><span>🕐 03:00 PM</span><span>📍 Lab 1</span></div>
+      </div>
+      <div class="event-card">
+        <div class="event-status status-completed"></div>
+        <span class="event-tag tag-session">Session</span>
+        <div class="event-title">Python for Beginners</div>
+        <div class="event-desc">Introduction to Python programming and simple projects.</div>
+        <div class="event-meta"><span>📅 Jan 18, 2026</span><span>🕐 10:00 AM</span><span>📍 Lab 2</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- ATTENDANCE -->
+<section id="attendance">
+  <div class="section-label">Track</div>
+  <h2>Attendance</h2>
+  <p class="section-desc">Mark and track member attendance for each club session.</p>
+
+  <div class="attendance-header">
+    <div class="attendance-date">
+      📅 <input type="date" id="att-date" onchange="updateAttDate()">
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-outline" onclick="markAll('P')" style="font-size:0.8rem;padding:9px 16px;">✓ All Present</button>
+      <button class="btn btn-outline" onclick="markAll('A')" style="font-size:0.8rem;padding:9px 16px;">✗ All Absent</button>
+    </div>
+  </div>
+
+  <div class="att-summary">
+    <div class="att-card">
+      <div class="att-icon" style="background:rgba(67,232,216,0.1);">✅</div>
+      <div>
+        <div class="att-val" id="count-present" style="color:var(--accent3)">0</div>
+        <div class="att-lbl">Present</div>
+      </div>
+    </div>
+    <div class="att-card">
+      <div class="att-icon" style="background:rgba(255,101,132,0.1);">❌</div>
+      <div>
+        <div class="att-val" id="count-absent" style="color:var(--accent2)">0</div>
+        <div class="att-lbl">Absent</div>
+      </div>
+    </div>
+    <div class="att-card">
+      <div class="att-icon" style="background:rgba(245,197,66,0.1);">⏰</div>
+      <div>
+        <div class="att-val" id="count-late" style="color:var(--gold)">0</div>
+        <div class="att-lbl">Late</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="att-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Section</th>
+          <th>Status</th>
+          <th>Mark</th>
+        </tr>
+      </thead>
+      <tbody id="att-tbody">
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- DAILY SCHEDULE -->
+<section id="schedule">
+  <div class="section-label">Daily Plan</div>
+  <h2>Session Schedule</h2>
+  <p class="section-desc">Day-by-day event and session timeline for the week.</p>
+
+  <div class="schedule-day-selector" id="day-selector"></div>
+
+  <div id="schedule-content"></div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>C3 – Campus to Corporate</strong><br>
+  <span style="margin-top:6px;display:block;">© 2026 All Rights Reserved · c3@cahcet</span>
+</footer>
+
+<script>
+// ─── TABS ───────────────────────────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ─── MEMBER SEARCH ───────────────────────────────────────────────────
+function filterMembers(q) {
+  const cards = document.querySelectorAll('.member-card');
+  q = q.toLowerCase();
+  cards.forEach(c => {
+    const name = c.dataset.name.toLowerCase();
+    c.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+
+// ─── ATTENDANCE ──────────────────────────────────────────────────────
+const members = [
+  { name: 'Ashfaq Ahmed', role: 'President', section: 'A' },
+  { name: 'Mohammed Nabeel', role: 'Developer', section: 'B' },
+  { name: 'Abdul Gaffoor Asjad', role: 'Developer', section: 'A' },
+  { name: 'Mohammed Ayaz', role: 'Tech Lead', section: 'B' },
+  { name: 'Mohammed Aasif', role: 'Tech Lead', section: 'A' },
+  { name: 'Mohammed Abuzar', role: 'Presenter', section: 'B' },
+  { name: 'Harini Radhakrishnan', role: 'Presenter', section: 'C' },
+  { name: 'Faseeh Mohammed', role: 'Organizer', section: 'A' },
+  { name: 'Mohammed Aamir', role: 'Organizer', section: 'B' },
+  { name: 'Rohan Emmanuel', role: 'Organizer', section: 'C' },
+  { name: 'Samnesh', role: 'Organizer', section: 'A' },
+  { name: 'Deepadharshini Sankar', role: 'Trainee', section: 'B' },
+  { name: 'Sahira Fathima', role: 'Trainee', section: 'C' },
+  { name: 'Divyatharini Balakumar', role: 'Trainee', section: 'A' },
+];
+
+const attState = {};
+members.forEach((m, i) => attState[i] = null);
+
+// Set today's date
+const today = new Date();
+document.getElementById('att-date').valueAsDate = today;
+
+function initTable() {
+  const tbody = document.getElementById('att-tbody');
+  tbody.innerHTML = '';
+  members.forEach((m, i) => {
+    const st = attState[i];
+    const badge = st === 'P' ? '<span class="badge badge-present">● Present</span>'
+                : st === 'A' ? '<span class="badge badge-absent">● Absent</span>'
+                : st === 'L' ? '<span class="badge badge-late">● Late</span>'
+                : '<span class="badge" style="color:var(--muted)">— Unmarked</span>';
+    tbody.innerHTML += `
+      <tr>
+        <td style="color:var(--muted)">${i + 1}</td>
+        <td style="font-weight:500">${m.name}</td>
+        <td><span style="font-size:0.78rem;color:var(--accent3)">${m.role}</span></td>
+        <td><span style="font-size:0.78rem;color:var(--muted)">Section ${m.section}</span></td>
+        <td>${badge}</td>
+        <td>
+          <div class="att-toggle">
+            <button class="att-btn p ${st==='P'?'sel':''}" onclick="mark(${i},'P')">P</button>
+            <button class="att-btn a ${st==='A'?'sel':''}" onclick="mark(${i},'A')">A</button>
+            <button class="att-btn l ${st==='L'?'sel':''}" onclick="mark(${i},'L')">L</button>
+          </div>
+        </td>
+      </tr>`;
+  });
+  updateCounts();
+}
+
+function mark(i, status) {
+  attState[i] = status;
+  initTable();
+}
+
+function markAll(status) {
+  Object.keys(attState).forEach(k => attState[k] = status);
+  initTable();
+}
+
+function updateCounts() {
+  const vals = Object.values(attState);
+  document.getElementById('count-present').textContent = vals.filter(v => v === 'P').length;
+  document.getElementById('count-absent').textContent = vals.filter(v => v === 'A').length;
+  document.getElementById('count-late').textContent = vals.filter(v => v === 'L').length;
+}
+
+function updateAttDate() { /* date is tracked visually */ }
+
+initTable();
+
+// ─── DAILY SCHEDULE ──────────────────────────────────────────────────
+const scheduleData = {
+  'Mon': [
+    { time: '09:00 AM', title: 'Morning Stand-up', detail: 'Quick sync on weekly goals and member updates.', speaker: 'Ashfaq', tag: 'Org' },
+    { time: '10:30 AM', title: 'Python Basics Session', detail: 'Covering functions, loops, and OOP fundamentals for year-1 trainees.', speaker: 'Mohammed Nabeel', tag: 'Dev' },
+    { time: '02:00 PM', title: 'Presentation Practice', detail: 'Trainees present their week-1 learning summary to the team.', speaker: 'Mohammed Ayaz', tag: 'Pres' },
+  ],
+  'Tue': [
+    { time: '10:00 AM', title: 'Web Dev – HTML & CSS', detail: 'Hands-on lab: building a responsive portfolio layout.', speaker: 'Abdul Gaffoor Asjad', tag: 'Dev' },
+    { time: '01:00 PM', title: 'Design Review', detail: 'Reviewing member designs and giving constructive feedback.', speaker: 'Harini Radhakrishnan', tag: 'Pres' },
+    { time: '03:30 PM', title: 'Team Discussion', detail: 'Open forum for questions, suggestions, and upcoming event planning.', speaker: 'Faseeh Mohammed', tag: 'Org' },
+  ],
+  'Wed': [
+    { time: '09:30 AM', title: 'AI Tools Deep Dive', detail: 'Exploring NotebookLM, Gamma AI, and Perplexity AI for productivity.', speaker: 'Mohammed Aasif', tag: 'Dev' },
+    { time: '11:30 AM', title: 'Git & Version Control', detail: 'Branching strategies, pull requests, and conflict resolution.', speaker: 'Mohammed Nabeel', tag: 'Dev' },
+    { time: '02:30 PM', title: 'Hackathon Mock Round', detail: '2-hour mini-hackathon: build a landing page from scratch.', speaker: 'Ashfaq', tag: 'Org' },
+  ],
+  'Thu': [
+    { time: '10:00 AM', title: 'JavaScript Fundamentals', detail: 'DOM manipulation, event listeners, and async/await basics.', speaker: 'Abdul Gaffoor Asjad', tag: 'Dev' },
+    { time: '12:00 PM', title: 'Industry Talk', detail: 'Alumni guest session: how to crack your first tech internship.', speaker: 'Guest Speaker', tag: 'Sem' },
+    { time: '03:00 PM', title: 'Q&A + Networking', detail: 'Open networking session with the industry guest.', speaker: 'Rohan Emmanuel', tag: 'Org' },
+  ],
+  'Fri': [
+    { time: '09:00 AM', title: 'Weekly Wrap-up', detail: 'Summary of the week\'s learning, highlights, and achievements.', speaker: 'Ashfaq', tag: 'Org' },
+    { time: '10:30 AM', title: 'Project Showcase', detail: 'Members demo their weekly mini-projects to the club.', speaker: 'All Members', tag: 'Dev' },
+    { time: '02:00 PM', title: 'Next Week Planning', detail: 'Setting goals, assigning roles, and finalising upcoming event logistics.', speaker: 'Faseeh Mohammed', tag: 'Org' },
+  ],
+  'Sat': [
+    { time: '10:00 AM', title: 'Open Lab', detail: 'Members come together to work on personal or club projects freely.', speaker: 'Self-paced', tag: 'Dev' },
+    { time: '12:00 PM', title: 'Peer Code Review', detail: 'Review and critique each other\'s GitHub repositories for best practices.', speaker: 'Mohammed Abuzar', tag: 'Dev' },
+  ],
+};
+
+const days = Object.keys(scheduleData);
+const tagColors = { Dev: 'tag-workshop', Pres: 'tag-session', Org: 'tag-hackathon', Sem: 'tag-seminar' };
+
+let activeDay = days[0];
+
+function renderDaySelector() {
+  const sel = document.getElementById('day-selector');
+  sel.innerHTML = days.map(d =>
+    `<button class="day-pill ${d === activeDay ? 'active' : ''}" onclick="switchDay('${d}', this)">${d}</button>`
+  ).join('');
+}
+
+function renderSchedule(day) {
+  const items = scheduleData[day];
+  const content = document.getElementById('schedule-content');
+  content.innerHTML = `<div class="schedule-timeline">` +
+    items.map(item => `
+      <div class="schedule-item">
+        <div class="schedule-time">${item.time}</div>
+        <div class="schedule-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span class="event-tag ${tagColors[item.tag]}" style="margin:0;font-size:0.68rem">${item.tag === 'Dev' ? 'Dev' : item.tag === 'Pres' ? 'Pres' : item.tag === 'Org' ? 'Org' : 'Seminar'}</span>
+          </div>
+          <div class="schedule-title">${item.title}</div>
+          <div class="schedule-detail">${item.detail}</div>
+          <div class="schedule-speaker">
+            <div class="speaker-dot">${item.speaker.split(' ').map(w=>w[0]).join('').substring(0,2)}</div>
+            <span style="color:var(--muted)">${item.speaker}</span>
+          </div>
+        </div>
+      </div>
+    `).join('') + `</div>`;
+}
+
+function switchDay(day, el) {
+  activeDay = day;
+  document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderSchedule(day);
+}
+
+renderDaySelector();
+renderSchedule(activeDay);
+</script>
+</body>
+</html>
